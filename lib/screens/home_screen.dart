@@ -24,11 +24,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: kScaffoldBackgroundColor,
         elevation: 0,
-        leading: Icon(
+        leading: const Icon(
           Icons.gps_fixed,
           size: 15.0,
         ),
-        title: Text(
+        title: const Text(
           '123/85 Park Street, Kolkata 700016',
           style: TextStyle(fontSize: 13.0),
         ),
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '30% OFF On First Charge',
                             textAlign: TextAlign.center,
