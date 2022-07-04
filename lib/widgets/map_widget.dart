@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:mapmyindia_gl/mapmyindia_gl.dart';
-
 import 'dart:async';
 import '../utilities/constants.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
@@ -14,8 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapWidget extends StatefulWidget {
-  //MyFlexibleAppBar({Key? key}) : super(key: key);
-
   @override
   State<MapWidget> createState() => _MapWidgetState();
 }
@@ -73,13 +70,8 @@ class _MapWidgetState extends State<MapWidget> {
         .getLocation()
         .then((_) {
       setState(() {
+        print('Value Of isLoading: ${isLoading}');
         isLoading = false;
-        // currentMapLatitude =
-        //     Provider.of<LocationProvider>(context, listen: false)
-        //         .currentLatitude;
-        // currentMapLongitude =
-        //     Provider.of<LocationProvider>(context, listen: false)
-        //         .currentLongitude;
       });
     });
     currentMapLatitude =
@@ -88,8 +80,7 @@ class _MapWidgetState extends State<MapWidget> {
         Provider.of<LocationProvider>(context, listen: false).currentLongitude;
     latLng = LatLng(currentMapLatitude, currentMapLongitude);
     cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
-    // newGoogleMapController?.animateCamera(CameraUpdate.newCameraPosition(
-    //     CameraPosition(target: latLng!, zoom: 12.0)));
+
     super.initState();
   }
 
@@ -99,6 +90,9 @@ class _MapWidgetState extends State<MapWidget> {
 
     LatLng latLngPosition =
         LatLng(currentPosition.latitude, currentPosition.longitude);
+
+    print('Current Position Latitude: ${currentPosition.latitude}');
+    print('Current Position Longitude: ${currentPosition.longitude}');
 
     CameraPosition newCameraPosition =
         CameraPosition(target: latLngPosition, zoom: 18.0);

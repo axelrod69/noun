@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           fit: BoxFit.contain,
           child: Text(
             addressProvider,
-            style: const TextStyle(fontSize: 13.0),
+            style: const TextStyle(fontSize: 16.0),
           ),
         ),
       ),
@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 controller: controller,
                 child: Container(
                   // color: Colors.amber,
-                  padding: EdgeInsets.only(top: 35.0),
+                  padding: const EdgeInsets.only(top: 35.0),
                   child: Column(
                     children: [
                       CarouselWidget(

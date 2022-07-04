@@ -68,10 +68,10 @@ class LocationProvider with ChangeNotifier {
         desiredAccuracy: LocationAccuracy.high);
   }
 
-  Future<void> getDefaultAddress() async {
-    GetAddressFromLatLong;
-    notifyListeners();
-  }
+  // Future<void> getDefaultAddress() async {
+  //   GetAddressFromLatLong;
+  //   notifyListeners();
+  // }
 
   Future<void> GetAddressFromLatLong(Position position) async {
     List<Placemark> placemarks =
@@ -109,7 +109,7 @@ class LocationProvider with ChangeNotifier {
         await placemarkFromCoordinates(latitude, longitude);
     print(placemarks);
     Placemark place = placemarks[0];
-    _newAddressSet =
+    _deliveryAddress =
         '${place.street}, ${place.thoroughfare} ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea} ${place.country}';
     postCode = place.postalCode!;
     addressLine = '${place.street} ${place.thoroughfare}';
@@ -132,8 +132,8 @@ class LocationProvider with ChangeNotifier {
   Future<void> getLocation() async {
     Position position = await _getGeoLocationPosition();
     print('Current Location Response: $position');
-    print('Current Latitude: ${position.latitude}');
-    print('Current Longitude:${position.longitude}');
+    print('Current LatitudeSSSSSSSSS: ${position.latitude}');
+    print('Current LongitudeSSSSSSSSSS:${position.longitude}');
     GetAddressFromLatLong(position).then((_) {
       if (_address.length > 0) {
         isLoading = false;

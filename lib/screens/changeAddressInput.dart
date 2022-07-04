@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/currentLocation.dart';
 import '../models/changeLocation.dart';
+import '../widgets/map_widget.dart';
 
 class SelectAddress extends StatefulWidget {
   SelectAddressState createState() => SelectAddressState();
