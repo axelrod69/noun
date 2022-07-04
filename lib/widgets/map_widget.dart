@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +9,9 @@ import 'dart:async';
 import '../utilities/constants.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import '../models/clusterPoints.dart';
+import '../models/currentLocation.dart';
+import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapWidget extends StatefulWidget {
   //MyFlexibleAppBar({Key? key}) : super(key: key);
@@ -19,43 +21,13 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidgetState extends State<MapWidget> {
-  // late MapmyIndiaMapController mapController;
-  // static final CameraPosition _kInitialPosition = const CameraPosition(
-  //   target: LatLng(28.551087, 77.257373),
-  //   zoom: 14.0,
-  // );
-  // static const String ACCESS_TOKEN = "c9404f6161e639aaf868397cf5e89f38";
-  // static const String REST_API_KEY = "c9404f6161e639aaf868397cf5e89f38";
-  // static const String ATLAS_CLIENT_ID =
-  //     "33OkryzDZsJ3Eeti8B8qH4oK3KqUEk1IpW5GUnHfkV85sN2QGGT5s6tUkippv26iJAbbIa8z3MxYcr6eUmzSgIedCe5fqB4R";
-  // static const String ATLAS_CLIENT_SECRET =
-  //     "lrFxI-iSEg-LTbCK1u10b3oQLmLXU31xS7NbhdglEIqb0LVY2d1VkPTekp2l0xh6V0OQMIjRu1Zkd-l9Kz-mc1NUGv528Y_1eXawuT9WUOc=";
-
-  // void setPermission() async {
-  //   if (!kIsWeb) {
-  //     final location = Location();
-  //     final hasPermissions = await location.hasPermission();
-  //     if (hasPermissions != PermissionStatus.granted) {
-  //       await location.requestPermission();
-  //     }
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   MapmyIndiaAccountManager.setMapSDKKey(ACCESS_TOKEN);
-  //   MapmyIndiaAccountManager.setRestAPIKey(REST_API_KEY);
-  //   MapmyIndiaAccountManager.setAtlasClientId(ATLAS_CLIENT_ID);
-  //   MapmyIndiaAccountManager.setAtlasClientSecret(ATLAS_CLIENT_SECRET);
-  //   // setState(() {
-  //   //   selectedFeatureType = FeatureType.MAP_EVENT;
-  //   // });
-  //   setPermission();
-  // }
-
   late ClusterManager _manager;
+  double currentMapLatitude = 0.0;
+  double currentMapLongitude = 0.0;
+
+  LatLng? latLng;
+  CameraPosition? cameraPosition;
+  bool isLoading = true;
 
   final Completer<GoogleMapController> _controller = Completer();
 
@@ -63,8 +35,7 @@ class _MapWidgetState extends State<MapWidget> {
 
   GoogleMapController? newGoogleMapController;
 
-  final CameraPosition _parisCameraPosition =
-      CameraPosition(target: LatLng(48.856613, 2.352222), zoom: 12.0);
+  // CameraPosition(target: LatLng(48.856613, 2.352222), zoom: 12.0);
 
   List<Place> items = [
     for (int i = 0; i < 10; i++)
@@ -98,8 +69,32 @@ class _MapWidgetState extends State<MapWidget> {
   void initState() {
     // TODO: implement initState
     _manager = _initClusterManager();
+    Provider.of<LocationProvider>(context, listen: false)
+        .getLocation()
+        .then((_) {
+      setState(() {
+        isLoading = false;
+        currentMapLatitude =
+            Provider.of<LocationProvider>(context, listen: false)
+                .currentLatitude;
+        currentMapLongitude =
+            Provider.of<LocationProvider>(context, listen: false)
+                .currentLongitude;
+      });
+    });
+    // currentMapLatitude =
+    //     Provider.of<LocationProvider>(context, listen: false).currentLatitude;
+    // currentMapLongitude =
+    //     Provider.of<LocationProvider>(context, listen: false).currentLongitude;
+    latLng = LatLng(currentMapLatitude, currentMapLongitude);
+    cameraPosition = CameraPosition(target: latLng!, zoom: 12.0);
+    // newGoogleMapController?.animateCamera(CameraUpdate.newCameraPosition(
+    //     CameraPosition(target: latLng!, zoom: 12.0)));
+
     super.initState();
   }
+
+  // final CameraPosition _parisCameraPosition = cameraPosition;
 
   ClusterManager _initClusterManager() {
     return ClusterManager<Place>(items, _updateMarkers,
@@ -116,31 +111,37 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
-    return Stack(
-      children: [
-        Container(
-          height: mediaQuery.height * 0.6,
-          // child: MapmyIndiaMap(
-          //   initialCameraPosition: _kInitialPosition,
-          //   onMapCreated: (map) {
-          //     mapController = map;
-          //     mapController.getMapmyIndiaStyle();
-          //   },
-          //   onMapClick: (point, latlng) => {
-          //     print(latlng.toString()),
-          //     // Fluttertoast.showToast(msg: latlng.toString(), toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM)
-          //   },
-          // ),
-          child: GoogleMap(
-            initialCameraPosition: _parisCameraPosition,
-            markers: markers,
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              _manager.setMapId(controller.mapId);
-              newGoogleMapController = controller;
-              newGoogleMapController!.setMapStyle('''
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xff00ffba),
+            ),
+          )
+        : Stack(
+            children: [
+              Container(
+                height: mediaQuery.height * 0.6,
+                // child: MapmyIndiaMap(
+                //   initialCameraPosition: _kInitialPosition,
+                //   onMapCreated: (map) {
+                //     mapController = map;
+                //     mapController.getMapmyIndiaStyle();
+                //   },
+                //   onMapClick: (point, latlng) => {
+                //     print(latlng.toString()),
+                //     // Fluttertoast.showToast(msg: latlng.toString(), toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM)
+                //   },
+                // ),
+                child: GoogleMap(
+                  initialCameraPosition: cameraPosition!,
+                  markers: markers,
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                    _manager.setMapId(controller.mapId);
+                    newGoogleMapController = controller;
+                    newGoogleMapController!.setMapStyle('''
                     [
                       {
                         "elementType": "geometry",
@@ -303,36 +304,37 @@ class _MapWidgetState extends State<MapWidget> {
                       }
                     ]
                 ''');
-            },
-            // onCameraMove: _manager.onCameraMove,
-            // onCameraIdle: _manager.updateMap
-          ),
-        ),
-        Positioned(
-          //top: 2,
-          child: Padding(
-            padding: EdgeInsets.only(right: 55.0, left: 55.0, top: 30.0),
-            child: TextField(
-              cursorColor: Theme.of(context).primaryColor,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10.0),
-                hintText: 'Destination',
-                prefixIcon: Icon(
-                  Icons.location_on,
-                  color: Colors.white,
-                ),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.secondary,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  borderSide: BorderSide.none,
+                  },
+                  // onCameraMove: _manager.onCameraMove,
+                  // onCameraIdle: _manager.updateMap
                 ),
               ),
-            ),
-          ),
-        ),
-      ],
-    );
+              Positioned(
+                //top: 2,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(right: 55.0, left: 55.0, top: 30.0),
+                  child: TextField(
+                    cursorColor: Theme.of(context).primaryColor,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(10.0),
+                      hintText: 'Destination',
+                      prefixIcon: const Icon(
+                        Icons.location_on,
+                        color: Colors.white,
+                      ),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.secondary,
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
@@ -344,7 +346,7 @@ class _MapWidgetState extends State<MapWidget> {
             print('---- $cluster');
             cluster.items.forEach((p) => print(p));
           },
-          icon: await _getMarkerBitmap(cluster.isMultiple ? 125 : 75,
+          icon: await _getMarkerBitmap(cluster.isMultiple ? 80 : 50,
               text: cluster.isMultiple ? cluster.count.toString() : null),
         );
       };
@@ -383,3 +385,40 @@ class _MapWidgetState extends State<MapWidget> {
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
 }
+
+
+// late MapmyIndiaMapController mapController;
+  // static final CameraPosition _kInitialPosition = const CameraPosition(
+  //   target: LatLng(28.551087, 77.257373),
+  //   zoom: 14.0,
+  // );
+  // static const String ACCESS_TOKEN = "c9404f6161e639aaf868397cf5e89f38";
+  // static const String REST_API_KEY = "c9404f6161e639aaf868397cf5e89f38";
+  // static const String ATLAS_CLIENT_ID =
+  //     "33OkryzDZsJ3Eeti8B8qH4oK3KqUEk1IpW5GUnHfkV85sN2QGGT5s6tUkippv26iJAbbIa8z3MxYcr6eUmzSgIedCe5fqB4R";
+  // static const String ATLAS_CLIENT_SECRET =
+  //     "lrFxI-iSEg-LTbCK1u10b3oQLmLXU31xS7NbhdglEIqb0LVY2d1VkPTekp2l0xh6V0OQMIjRu1Zkd-l9Kz-mc1NUGv528Y_1eXawuT9WUOc=";
+
+  // void setPermission() async {
+  //   if (!kIsWeb) {
+  //     final location = Location();
+  //     final hasPermissions = await location.hasPermission();
+  //     if (hasPermissions != PermissionStatus.granted) {
+  //       await location.requestPermission();
+  //     }
+  //   }
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   MapmyIndiaAccountManager.setMapSDKKey(ACCESS_TOKEN);
+  //   MapmyIndiaAccountManager.setRestAPIKey(REST_API_KEY);
+  //   MapmyIndiaAccountManager.setAtlasClientId(ATLAS_CLIENT_ID);
+  //   MapmyIndiaAccountManager.setAtlasClientSecret(ATLAS_CLIENT_SECRET);
+  //   // setState(() {
+  //   //   selectedFeatureType = FeatureType.MAP_EVENT;
+  //   // });
+  //   setPermission();
+  // }

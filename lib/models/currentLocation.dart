@@ -10,6 +10,8 @@ class LocationProvider with ChangeNotifier {
   String? _state = '';
   Map<String, dynamic> _coorDinates = {'lat': 0.0, 'lng': 0.0};
   bool isLoading = true;
+  double _currentLatitude = 0.0;
+  double _currentLongitude = 0.0;
 
   bool get loading {
     return isLoading;
@@ -21,6 +23,14 @@ class LocationProvider with ChangeNotifier {
 
   Map<String, dynamic> get coorDinates {
     return {..._coorDinates};
+  }
+
+  double get currentLatitude {
+    return _currentLatitude;
+  }
+
+  double get currentLongitude {
+    return _currentLongitude;
   }
 
   String? postCode;
@@ -91,6 +101,9 @@ class LocationProvider with ChangeNotifier {
 
   Future<void> getLocation() async {
     Position position = await _getGeoLocationPosition();
+    print('Current Location Response: $position');
+    print('Current Latitude: ${position.latitude}');
+    print('Current Longitude:${position.longitude}');
     GetAddressFromLatLong(position).then((_) {
       if (_address.length > 0) {
         isLoading = false;
@@ -98,6 +111,11 @@ class LocationProvider with ChangeNotifier {
         isLoading = true;
       }
     });
+
+    _currentLatitude = position.latitude;
+    _currentLongitude = position.longitude;
+
     notifyListeners();
+    // return position;
   }
 }
