@@ -6,6 +6,7 @@ class LocationProvider with ChangeNotifier {
   LocationProvider() {}
 
   String _deliveryAddress = '';
+  String _newAddressSet = '';
   String _address = '';
   String? _state = '';
   Map<String, dynamic> _coorDinates = {'lat': 0.0, 'lng': 0.0};
@@ -19,6 +20,10 @@ class LocationProvider with ChangeNotifier {
 
   String get deliveryAddress {
     return _deliveryAddress;
+  }
+
+  String get newAddressSet {
+    return _newAddressSet;
   }
 
   Map<String, dynamic> get coorDinates {
@@ -71,7 +76,7 @@ class LocationProvider with ChangeNotifier {
   Future<void> GetAddressFromLatLong(Position position) async {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
+    print('Placemarks $placemarks');
     Placemark place = placemarks[0];
     _address = '${place.subLocality}';
     _deliveryAddress =
@@ -96,6 +101,31 @@ class LocationProvider with ChangeNotifier {
     print('Coordinates in Location ${_coorDinates['lat']}');
     print('Coordinates in Location ${_coorDinates['lng']}');
     // setState(() {});
+    notifyListeners();
+  }
+
+  Future<void> newAddress(double latitude, double longitude) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+    print(placemarks);
+    Placemark place = placemarks[0];
+    _newAddressSet =
+        '${place.street}, ${place.thoroughfare} ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.administrativeArea} ${place.country}';
+    postCode = place.postalCode!;
+    addressLine = '${place.street} ${place.thoroughfare}';
+    locality = place.subLocality!;
+    city = place.locality!;
+    selectedState = place.administrativeArea!;
+    print('Initial Address $postCode');
+    print('Initial Address $addressLine');
+    print('Initial Address $locality');
+    print('Initial Address $city');
+    print('Initial Address $selectedState');
+    print('New Address $_deliveryAddress');
+    // setState(() {});
+    _state = place.administrativeArea;
+    _coorDinates['lat'] = latitude;
+    _coorDinates['lng'] = longitude;
     notifyListeners();
   }
 

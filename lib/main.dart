@@ -16,6 +16,8 @@ import './screens/booking_details_screen.dart';
 import './screens/select_money_charge_screen.dart';
 import 'package:provider/provider.dart';
 import './models/currentLocation.dart';
+import './models/changeLocation.dart';
+import './screens/changeAddressInput.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +31,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => LocationProvider())
+        ChangeNotifierProvider(create: (context) => LocationProvider()),
+        ChangeNotifierProvider(create: (context) => ChangeLocationProvider())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -57,6 +60,7 @@ class MyApp extends StatelessWidget {
           SlotBookingScreen.id: (context) => SlotBookingScreen(),
           MoneyAndChargeScreen.id: (context) => MoneyAndChargeScreen(),
           // BookingDetails.id: (context) => BookingDetails(),
+          '/change-address': (context) => SelectAddress()
         },
         debugShowCheckedModeBanner: false,
       ),

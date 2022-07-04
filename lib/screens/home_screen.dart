@@ -1,11 +1,10 @@
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
-
-import 'dart:ui';
+import 'package:provider/provider.dart';
 import '../utilities/constants.dart';
 import '../widgets/carousel_widget.dart';
 import '../widgets/map_widget.dart';
+import '../models/currentLocation.dart';
+import './changeAddressInput.dart';
 
 class HomeScreen extends StatefulWidget {
   //HomeScreen({Key? key}) : super(key: key);
@@ -18,19 +17,28 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final addressProvider =
+        Provider.of<LocationProvider>(context).deliveryAddress;
     final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
       backgroundColor: kScaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: kScaffoldBackgroundColor,
         elevation: 0,
-        leading: const Icon(
-          Icons.gps_fixed,
-          size: 15.0,
+        leading: InkWell(
+          onTap: () => Navigator.of(context).pushNamed('/change-address'),
+          child: const Icon(
+            Icons.gps_fixed,
+            size: 15.0,
+          ),
         ),
-        title: const Text(
-          '123/85 Park Street, Kolkata 700016',
-          style: TextStyle(fontSize: 13.0),
+        title: FittedBox(
+          fit: BoxFit.contain,
+          child: Text(
+            addressProvider,
+            style: const TextStyle(fontSize: 13.0),
+          ),
         ),
       ),
       body: Stack(
