@@ -25,10 +25,11 @@ class _MapWidgetState extends State<MapWidget> {
   LatLng? latLng;
   CameraPosition? cameraPosition;
   bool isLoading = true;
+  late List<Marker> markers;
 
   final Completer<GoogleMapController> _controller = Completer();
 
-  Set<Marker> markers = {};
+  // Set<Marker> markers = {};
 
   GoogleMapController? newGoogleMapController;
 
@@ -72,24 +73,79 @@ class _MapWidgetState extends State<MapWidget> {
       setState(() {
         print('Value Of isLoading: ${isLoading}');
         isLoading = false;
+        currentMapLatitude =
+            Provider.of<LocationProvider>(context, listen: false)
+                .currentLatitude;
+        currentMapLongitude =
+            Provider.of<LocationProvider>(context, listen: false)
+                .currentLongitude;
+
+        print('Laaaaaaaaaaaat: $currentMapLatitude');
+
+        print('Longgggggggggggggggggg: $currentMapLongitude');
+
+        currentMapLatitude =
+            Provider.of<LocationProvider>(context, listen: false)
+                .currentLatitude;
+        currentMapLongitude =
+            Provider.of<LocationProvider>(context, listen: false)
+                .currentLongitude;
+        latLng = LatLng(currentMapLatitude, currentMapLongitude);
       });
     });
-    currentMapLatitude =
-        Provider.of<LocationProvider>(context, listen: false).currentLatitude;
-    currentMapLongitude =
-        Provider.of<LocationProvider>(context, listen: false).currentLongitude;
-    latLng = LatLng(currentMapLatitude, currentMapLongitude);
-    cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
 
+    markers = [
+      Marker(
+          markerId: const MarkerId('1'),
+          position: LatLng(currentMapLatitude, currentMapLongitude))
+    ];
+
+    print('Latitude Longitude: $latLng');
+
+    cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
     super.initState();
   }
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   _manager = _initClusterManager();
+  //   Provider.of<LocationProvider>(context, listen: false)
+  //       .getLocation()
+  //       .then((_) {
+  //     setState(() {
+  //       print('Value Of isLoading: ${isLoading}');
+  //       isLoading = false;
+  //       currentMapLatitude =
+  //           Provider.of<LocationProvider>(context, listen: false)
+  //               .currentLatitude;
+  //       currentMapLongitude =
+  //           Provider.of<LocationProvider>(context, listen: false)
+  //               .currentLongitude;
+
+  //       print('Laaaaaaaaaaaat: $currentMapLatitude');
+
+  //       print('Longgggggggggggggggggg: $currentMapLongitude');
+  //     });
+  //   });
+  //   currentMapLatitude =
+  //       Provider.of<LocationProvider>(context, listen: false).currentLatitude;
+  //   currentMapLongitude =
+  //       Provider.of<LocationProvider>(context, listen: false).currentLongitude;
+  //   latLng = LatLng(currentMapLatitude, currentMapLongitude);
+
+  //   print('Latitude Longitude: $latLng');
+
+  //   cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
+
+  //   super.initState();
+  // }
 
   locateUserPosition() async {
     Position currentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    LatLng latLngPosition =
-        LatLng(currentPosition.latitude, currentPosition.longitude);
+    LatLng latLngPosition = LatLng(currentMapLatitude, currentMapLongitude);
 
     print('Current Position Latitude: ${currentPosition.latitude}');
     print('Current Position Longitude: ${currentPosition.longitude}');
@@ -112,7 +168,7 @@ class _MapWidgetState extends State<MapWidget> {
   void _updateMarkers(Set<Marker> markers) {
     print('Updated ${markers.length} markers');
     setState(() {
-      this.markers = markers;
+      this.markers = markers as List<Marker>;
     });
   }
 
@@ -142,9 +198,9 @@ class _MapWidgetState extends State<MapWidget> {
                 // ),
                 child: GoogleMap(
                   initialCameraPosition: cameraPosition!,
-                  markers: markers,
+                  markers: Set<Marker>.of(markers),
                   mapType: MapType.normal,
-                  myLocationEnabled: true,
+                  myLocationEnabled: false,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                     _manager.setMapId(controller.mapId);
@@ -312,7 +368,7 @@ class _MapWidgetState extends State<MapWidget> {
                       }
                     ]
                 ''');
-                    locateUserPosition();
+                    // locateUserPosition();
                   },
                   // onCameraMove: _manager.onCameraMove,
                   // onCameraIdle: _manager.updateMap
