@@ -18,14 +18,14 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidgetState extends State<MapWidget> {
-  late ClusterManager _manager;
-  double currentMapLatitude = 0.0;
-  double currentMapLongitude = 0.0;
+  // late ClusterManager _manager;
+  late double currentMapLatitude;
+  late double currentMapLongitude;
+  List<Marker> markers = [];
 
   LatLng? latLng;
   CameraPosition? cameraPosition;
   bool isLoading = true;
-  late List<Marker> markers;
 
   final Completer<GoogleMapController> _controller = Completer();
 
@@ -35,145 +35,112 @@ class _MapWidgetState extends State<MapWidget> {
 
   // CameraPosition(target: LatLng(48.856613, 2.352222), zoom: 12.0);
 
-  List<Place> items = [
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Place $i',
-          latLng: LatLng(48.848200 + i * 0.001, 2.319124 + i * 0.001)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Restaurant $i',
-          // isClosed: i % 2 == 0,
-          latLng: LatLng(48.858265 - i * 0.001, 2.350107 + i * 0.001)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Bar $i',
-          latLng: LatLng(48.858265 + i * 0.01, 2.350107 - i * 0.01)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Hotel $i',
-          latLng: LatLng(48.858265 - i * 0.1, 2.350107 - i * 0.01)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Test $i',
-          latLng: LatLng(66.160507 + i * 0.1, -153.369141 + i * 0.1)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Test2 $i',
-          latLng: LatLng(-36.848461 + i * 1, 169.763336 + i * 1)),
-  ];
+  // List<Place> items = [
+  //   for (int i = 0; i < 10; i++)
+  //     Place(
+  //         name: 'Place $i',
+  //         latLng: LatLng(48.848200 + i * 0.001, 2.319124 + i * 0.001)),
+  //   for (int i = 0; i < 10; i++)
+  //     Place(
+  //         name: 'Restaurant $i',
+  //         // isClosed: i % 2 == 0,
+  //         latLng: LatLng(48.858265 - i * 0.001, 2.350107 + i * 0.001)),
+  //   for (int i = 0; i < 10; i++)
+  //     Place(
+  //         name: 'Bar $i',
+  //         latLng: LatLng(48.858265 + i * 0.01, 2.350107 - i * 0.01)),
+  //   for (int i = 0; i < 10; i++)
+  //     Place(
+  //         name: 'Hotel $i',
+  //         latLng: LatLng(48.858265 - i * 0.1, 2.350107 - i * 0.01)),
+  //   for (int i = 0; i < 10; i++)
+  //     Place(
+  //         name: 'Test $i',
+  //         latLng: LatLng(66.160507 + i * 0.1, -153.369141 + i * 0.1)),
+  //   for (int i = 0; i < 10; i++)
+  //     Place(
+  //         name: 'Test2 $i',
+  //         latLng: LatLng(-36.848461 + i * 1, 169.763336 + i * 1)),
+  // ];
 
   @override
   void initState() {
     // TODO: implement initState
-    _manager = _initClusterManager();
+
+    // _manager = _initClusterManager();
     Provider.of<LocationProvider>(context, listen: false)
         .getLocation()
         .then((_) {
       setState(() {
         print('Value Of isLoading: ${isLoading}');
         isLoading = false;
-        currentMapLatitude =
-            Provider.of<LocationProvider>(context, listen: false)
-                .currentLatitude;
-        currentMapLongitude =
-            Provider.of<LocationProvider>(context, listen: false)
-                .currentLongitude;
-
-        print('Laaaaaaaaaaaat: $currentMapLatitude');
-
-        print('Longgggggggggggggggggg: $currentMapLongitude');
-
-        currentMapLatitude =
-            Provider.of<LocationProvider>(context, listen: false)
-                .currentLatitude;
-        currentMapLongitude =
-            Provider.of<LocationProvider>(context, listen: false)
-                .currentLongitude;
-        latLng = LatLng(currentMapLatitude, currentMapLongitude);
       });
     });
 
-    markers = [
-      Marker(
-          markerId: const MarkerId('1'),
-          position: LatLng(currentMapLatitude, currentMapLongitude))
-    ];
+    currentMapLatitude = Provider.of<LocationProvider>(context, listen: false)
+        .coorDinates['lat'];
+
+    currentMapLongitude = Provider.of<LocationProvider>(context, listen: false)
+        .coorDinates['lng'];
+
+    print('LAT LONGGGGGG');
+    print('Current Position Latitude: $currentMapLatitude');
+    print('Current Position Longitude: $currentMapLongitude');
+
+    latLng = LatLng(currentMapLatitude, currentMapLongitude);
 
     print('Latitude Longitude: $latLng');
 
     cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
+
     super.initState();
   }
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   _manager = _initClusterManager();
-  //   Provider.of<LocationProvider>(context, listen: false)
-  //       .getLocation()
-  //       .then((_) {
-  //     setState(() {
-  //       print('Value Of isLoading: ${isLoading}');
-  //       isLoading = false;
-  //       currentMapLatitude =
-  //           Provider.of<LocationProvider>(context, listen: false)
-  //               .currentLatitude;
-  //       currentMapLongitude =
-  //           Provider.of<LocationProvider>(context, listen: false)
-  //               .currentLongitude;
-
-  //       print('Laaaaaaaaaaaat: $currentMapLatitude');
-
-  //       print('Longgggggggggggggggggg: $currentMapLongitude');
-  //     });
-  //   });
-  //   currentMapLatitude =
-  //       Provider.of<LocationProvider>(context, listen: false).currentLatitude;
-  //   currentMapLongitude =
-  //       Provider.of<LocationProvider>(context, listen: false).currentLongitude;
-  //   latLng = LatLng(currentMapLatitude, currentMapLongitude);
-
-  //   print('Latitude Longitude: $latLng');
-
-  //   cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
-
-  //   super.initState();
-  // }
-
   locateUserPosition() async {
-    Position currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    // Position currentPosition = await Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.high);
 
     LatLng latLngPosition = LatLng(currentMapLatitude, currentMapLongitude);
-
-    print('Current Position Latitude: ${currentPosition.latitude}');
-    print('Current Position Longitude: ${currentPosition.longitude}');
 
     CameraPosition newCameraPosition =
         CameraPosition(target: latLngPosition, zoom: 18.0);
 
-    newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
+    setState(() {
+      newGoogleMapController!
+          .animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
+    });
+  }
+
+  void updateMarkers(double latitude, double longitude) {
+    markers = [
+      Marker(
+          markerId: const MarkerId('1'), position: LatLng(latitude, longitude))
+    ];
+    setState(() {
+      newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: LatLng(latitude, longitude), zoom: 18.0)));
+    });
   }
 
   // final CameraPosition _parisCameraPosition = cameraPosition;
   // cameraPosition = CameraPosition(target: )
 
-  ClusterManager _initClusterManager() {
-    return ClusterManager<Place>(items, _updateMarkers,
-        markerBuilder: _markerBuilder);
-  }
+  // ClusterManager _initClusterManager() {
+  //   return ClusterManager<Place>(items, _updateMarkers,
+  //       markerBuilder: _markerBuilder);
+  // }
 
-  void _updateMarkers(Set<Marker> markers) {
-    print('Updated ${markers.length} markers');
-    setState(() {
-      this.markers = markers as List<Marker>;
-    });
-  }
+  // void _updateMarkers(Set<Marker> markers) {
+  //   print('Updated ${markers.length} markers');
+  //   setState(() {
+  //     this.markers = markers as List<Marker>;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final coorDinates = Provider.of<LocationProvider>(context).coorDinates;
+
     final mediaQuery = MediaQuery.of(context).size;
     return isLoading
         ? const Center(
@@ -185,25 +152,15 @@ class _MapWidgetState extends State<MapWidget> {
             children: [
               Container(
                 height: mediaQuery.height * 0.6,
-                // child: MapmyIndiaMap(
-                //   initialCameraPosition: _kInitialPosition,
-                //   onMapCreated: (map) {
-                //     mapController = map;
-                //     mapController.getMapmyIndiaStyle();
-                //   },
-                //   onMapClick: (point, latlng) => {
-                //     print(latlng.toString()),
-                //     // Fluttertoast.showToast(msg: latlng.toString(), toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM)
-                //   },
-                // ),
                 child: GoogleMap(
                   initialCameraPosition: cameraPosition!,
                   markers: Set<Marker>.of(markers),
+                  // markers: markers,
                   mapType: MapType.normal,
-                  myLocationEnabled: false,
+                  // myLocationEnabled: true,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
-                    _manager.setMapId(controller.mapId);
+                    // _manager.setMapId(controller.mapId);
                     newGoogleMapController = controller;
                     newGoogleMapController!.setMapStyle('''
                     [
@@ -369,6 +326,12 @@ class _MapWidgetState extends State<MapWidget> {
                     ]
                 ''');
                     // locateUserPosition();
+                    updateMarkers(coorDinates['lat'], coorDinates['lng']);
+                    controller.animateCamera(CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                            target:
+                                LatLng(coorDinates['lat'], coorDinates['lng']),
+                            zoom: 18.0)));
                   },
                   // onCameraMove: _manager.onCameraMove,
                   // onCameraIdle: _manager.updateMap
@@ -450,6 +413,18 @@ class _MapWidgetState extends State<MapWidget> {
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
 }
+
+// child: MapmyIndiaMap(
+                //   initialCameraPosition: _kInitialPosition,
+                //   onMapCreated: (map) {
+                //     mapController = map;
+                //     mapController.getMapmyIndiaStyle();
+                //   },
+                //   onMapClick: (point, latlng) => {
+                //     print(latlng.toString()),
+                //     // Fluttertoast.showToast(msg: latlng.toString(), toastLength: Toast.LENGTH_LONG, gravity: ToastGravity.BOTTOM)
+                //   },
+                // ),
 
 
 // late MapmyIndiaMapController mapController;

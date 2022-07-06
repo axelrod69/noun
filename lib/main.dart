@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
             secondary: const Color(0xff1f1f1f),
           ),
         ),
-        // home: OnboardingScreen(),
-        home: HomeScreen(),
+        home: OnboardingScreen(),
+        // home: HomeScreen(),
         routes: {
           SignupScreen.id: (context) => SignupScreen(),
           WelcomeScreen.id: (context) => WelcomeScreen(),

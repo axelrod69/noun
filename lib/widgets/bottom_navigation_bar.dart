@@ -72,7 +72,7 @@ class BottomNavigationState extends State<BottomNavigation> {
               color: Theme.of(context).primaryColor,
               // spreadRadius: 1,
               blurRadius: 15,
-              offset: Offset(0, 0))
+              offset: Offset(1, 1))
         ]),
         child: CurvedNavigationBar(
           items: items,
