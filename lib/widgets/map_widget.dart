@@ -18,10 +18,10 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidgetState extends State<MapWidget> {
-  // late ClusterManager _manager;
+  late ClusterManager _manager;
   late double currentMapLatitude;
   late double currentMapLongitude;
-  List<Marker> markers = [];
+  // List<Marker> markers = [];
 
   LatLng? latLng;
   CameraPosition? cameraPosition;
@@ -29,45 +29,45 @@ class _MapWidgetState extends State<MapWidget> {
 
   final Completer<GoogleMapController> _controller = Completer();
 
-  // Set<Marker> markers = {};
+  Set<Marker> markers = {};
 
   GoogleMapController? newGoogleMapController;
 
   // CameraPosition(target: LatLng(48.856613, 2.352222), zoom: 12.0);
 
-  // List<Place> items = [
-  //   for (int i = 0; i < 10; i++)
-  //     Place(
-  //         name: 'Place $i',
-  //         latLng: LatLng(48.848200 + i * 0.001, 2.319124 + i * 0.001)),
-  //   for (int i = 0; i < 10; i++)
-  //     Place(
-  //         name: 'Restaurant $i',
-  //         // isClosed: i % 2 == 0,
-  //         latLng: LatLng(48.858265 - i * 0.001, 2.350107 + i * 0.001)),
-  //   for (int i = 0; i < 10; i++)
-  //     Place(
-  //         name: 'Bar $i',
-  //         latLng: LatLng(48.858265 + i * 0.01, 2.350107 - i * 0.01)),
-  //   for (int i = 0; i < 10; i++)
-  //     Place(
-  //         name: 'Hotel $i',
-  //         latLng: LatLng(48.858265 - i * 0.1, 2.350107 - i * 0.01)),
-  //   for (int i = 0; i < 10; i++)
-  //     Place(
-  //         name: 'Test $i',
-  //         latLng: LatLng(66.160507 + i * 0.1, -153.369141 + i * 0.1)),
-  //   for (int i = 0; i < 10; i++)
-  //     Place(
-  //         name: 'Test2 $i',
-  //         latLng: LatLng(-36.848461 + i * 1, 169.763336 + i * 1)),
-  // ];
+  List<Place> items = [
+    for (int i = 0; i < 10; i++)
+      Place(
+          name: 'Place $i',
+          latLng: LatLng(48.848200 + i * 0.001, 2.319124 + i * 0.001)),
+    for (int i = 0; i < 10; i++)
+      Place(
+          name: 'Restaurant $i',
+          // isClosed: i % 2 == 0,
+          latLng: LatLng(48.858265 - i * 0.001, 2.350107 + i * 0.001)),
+    for (int i = 0; i < 10; i++)
+      Place(
+          name: 'Bar $i',
+          latLng: LatLng(48.858265 + i * 0.01, 2.350107 - i * 0.01)),
+    for (int i = 0; i < 10; i++)
+      Place(
+          name: 'Hotel $i',
+          latLng: LatLng(48.858265 - i * 0.1, 2.350107 - i * 0.01)),
+    for (int i = 0; i < 10; i++)
+      Place(
+          name: 'Test $i',
+          latLng: LatLng(66.160507 + i * 0.1, -153.369141 + i * 0.1)),
+    for (int i = 0; i < 10; i++)
+      Place(
+          name: 'Test2 $i',
+          latLng: LatLng(-36.848461 + i * 1, 169.763336 + i * 1)),
+  ];
 
   @override
   void initState() {
     // TODO: implement initState
 
-    // _manager = _initClusterManager();
+    _manager = _initClusterManager();
     Provider.of<LocationProvider>(context, listen: false)
         .getLocation()
         .then((_) {
@@ -76,6 +76,8 @@ class _MapWidgetState extends State<MapWidget> {
         isLoading = false;
       });
     });
+
+    updateMarkers;
 
     currentMapLatitude = Provider.of<LocationProvider>(context, listen: false)
         .coorDinates['lat'];
@@ -112,10 +114,13 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   void updateMarkers(double latitude, double longitude) {
-    markers = [
+    print('LATITUDE $latitude');
+    print('LONGITUDE $longitude');
+
+    markers = {
       Marker(
           markerId: const MarkerId('1'), position: LatLng(latitude, longitude))
-    ];
+    };
     setState(() {
       newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(target: LatLng(latitude, longitude), zoom: 18.0)));
@@ -125,17 +130,17 @@ class _MapWidgetState extends State<MapWidget> {
   // final CameraPosition _parisCameraPosition = cameraPosition;
   // cameraPosition = CameraPosition(target: )
 
-  // ClusterManager _initClusterManager() {
-  //   return ClusterManager<Place>(items, _updateMarkers,
-  //       markerBuilder: _markerBuilder);
-  // }
+  ClusterManager _initClusterManager() {
+    return ClusterManager<Place>(items, _updateMarkers,
+        markerBuilder: _markerBuilder);
+  }
 
-  // void _updateMarkers(Set<Marker> markers) {
-  //   print('Updated ${markers.length} markers');
-  //   setState(() {
-  //     this.markers = markers as List<Marker>;
-  //   });
-  // }
+  void _updateMarkers(Set<Marker> markers) {
+    print('Updated ${markers.length} markers');
+    setState(() {
+      this.markers = markers;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,16 +158,16 @@ class _MapWidgetState extends State<MapWidget> {
               Container(
                 height: mediaQuery.height * 0.6,
                 child: GoogleMap(
-                  initialCameraPosition: cameraPosition!,
-                  markers: Set<Marker>.of(markers),
-                  // markers: markers,
-                  mapType: MapType.normal,
-                  // myLocationEnabled: true,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                    // _manager.setMapId(controller.mapId);
-                    newGoogleMapController = controller;
-                    newGoogleMapController!.setMapStyle('''
+                    initialCameraPosition: cameraPosition!,
+                    // markers: Set<Marker>.of(markers),
+                    markers: markers,
+                    mapType: MapType.normal,
+                    // myLocationEnabled: true,
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                      _manager.setMapId(controller.mapId);
+                      newGoogleMapController = controller;
+                      newGoogleMapController!.setMapStyle('''
                     [
                       {
                         "elementType": "geometry",
@@ -325,17 +330,16 @@ class _MapWidgetState extends State<MapWidget> {
                       }
                     ]
                 ''');
-                    // locateUserPosition();
-                    updateMarkers(coorDinates['lat'], coorDinates['lng']);
-                    controller.animateCamera(CameraUpdate.newCameraPosition(
-                        CameraPosition(
-                            target:
-                                LatLng(coorDinates['lat'], coorDinates['lng']),
-                            zoom: 18.0)));
-                  },
-                  // onCameraMove: _manager.onCameraMove,
-                  // onCameraIdle: _manager.updateMap
-                ),
+                      // locateUserPosition();
+                      updateMarkers(coorDinates['lat'], coorDinates['lng']);
+                      controller.animateCamera(CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                              target: LatLng(
+                                  coorDinates['lat'], coorDinates['lng']),
+                              zoom: 18.0)));
+                    },
+                    onCameraMove: _manager.onCameraMove,
+                    onCameraIdle: _manager.updateMap),
               ),
               Positioned(
                 //top: 2,

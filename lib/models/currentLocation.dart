@@ -126,6 +126,9 @@ class LocationProvider with ChangeNotifier {
     _state = place.administrativeArea;
     _coorDinates['lat'] = latitude;
     _coorDinates['lng'] = longitude;
+
+    print('Coordinates in new Location ${_coorDinates['lat']}');
+    print('Coordinates in new  Location ${_coorDinates['lng']}');
     notifyListeners();
   }
 
@@ -142,8 +145,11 @@ class LocationProvider with ChangeNotifier {
       }
     });
 
-    _currentLatitude = position.latitude;
-    _currentLongitude = position.longitude;
+    _coorDinates['lat'] = position.latitude;
+    _coorDinates['lng'] = position.longitude;
+
+    print('Geo Location Latitude: ${_coorDinates['lat']}');
+    print('Geo Location Longitude: ${_coorDinates['lng']}');
 
     notifyListeners();
     // return position;
