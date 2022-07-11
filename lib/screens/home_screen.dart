@@ -1,25 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:noun_customer_app/screens/changeAddressInput.dart';
 import 'package:provider/provider.dart';
 import '../utilities/constants.dart';
 import '../widgets/carousel_widget.dart';
 import '../widgets/map_widget.dart';
 import '../models/currentLocation.dart';
-import './changeAddressInput.dart';
 
 class HomeScreen extends StatefulWidget {
   //HomeScreen({Key? key}) : super(key: key);
   static const id = 'homeScreen';
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
+  CameraPosition? cameraPosition;
+  LatLng? latLng;
+  bool isLoading = true;
+  late ClusterManager _manager;
+  late double currentMapLatitude;
+  late double currentMapLongitude;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // _manager = _initClusterManager();
+    Provider.of<LocationProvider>(context, listen: false)
+        .getLocation()
+        .then((_) {
+      setState(() {
+        print('Value Of isLoading: ${isLoading}');
+        isLoading = false;
+      });
+    });
+
+    currentMapLatitude = Provider.of<LocationProvider>(context, listen: false)
+        .coorDinates['lat'];
+
+    currentMapLongitude = Provider.of<LocationProvider>(context, listen: false)
+        .coorDinates['lng'];
+
+    print('At Home Screen');
+    print('LAT LONGGGGGG');
+    print('Current Position Latitude: $currentMapLatitude');
+    print('Current Position Longitude: $currentMapLongitude');
+
+    latLng = LatLng(currentMapLatitude, currentMapLongitude);
+
+    print('Latitude Longitude: $latLng');
+
+    cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final addressProvider =
         Provider.of<LocationProvider>(context).deliveryAddress;
     final mediaQuery = MediaQuery.of(context);
+    final coorDinates = Provider.of<LocationProvider>(context).coorDinates;
 
     return Scaffold(
       backgroundColor: kScaffoldBackgroundColor,
@@ -27,23 +69,34 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: kScaffoldBackgroundColor,
         elevation: 0,
         leading: InkWell(
-          onTap: () => Navigator.of(context).pushNamed('/change-address'),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => SelectAddress())),
           child: const Icon(
             Icons.gps_fixed,
             size: 15.0,
           ),
         ),
-        title: FittedBox(
-          fit: BoxFit.contain,
-          child: Text(
-            addressProvider,
-            style: const TextStyle(fontSize: 16.0),
+        title: Container(
+          width: double.infinity,
+          height: mediaQuery.size.height * 0.025,
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: Text(
+              addressProvider,
+              style: const TextStyle(fontSize: 16.0),
+            ),
           ),
         ),
       ),
       body: Stack(
         children: [
-          MapWidget(),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.green,
+                  ),
+                )
+              : MapWidget(coorDinates, cameraPosition!),
           DraggableScrollableSheet(
             initialChildSize: 0.34,
             minChildSize: 0.34,

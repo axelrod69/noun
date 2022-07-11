@@ -6,13 +6,13 @@ class LocationProvider with ChangeNotifier {
   LocationProvider() {}
 
   String _deliveryAddress = '';
-  String _newAddressSet = '';
+  final String _newAddressSet = '';
   String _address = '';
   String? _state = '';
-  Map<String, dynamic> _coorDinates = {'lat': 0.0, 'lng': 0.0};
+  final Map<String, dynamic> _coorDinates = {'lat': 0.0, 'lng': 0.0};
   bool isLoading = true;
-  double _currentLatitude = 0.0;
-  double _currentLongitude = 0.0;
+  final double _currentLatitude = 0.0;
+  final double _currentLongitude = 0.0;
 
   bool get loading {
     return isLoading;
@@ -74,8 +74,12 @@ class LocationProvider with ChangeNotifier {
   // }
 
   Future<void> GetAddressFromLatLong(Position position) async {
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    print(
+        'GET ADDRESS FROM LATTTTTTTTTTTTTTTTTTTTTT LNGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+        _coorDinates['lat'] == 0.0 ? position.latitude : _coorDinates['lat'],
+        _coorDinates['lng'] == 0.0 ? position.longitude : _coorDinates['lng']);
     print('Placemarks $placemarks');
     Placemark place = placemarks[0];
     _address = '${place.subLocality}';
@@ -105,6 +109,8 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<void> newAddress(double latitude, double longitude) async {
+    print('NEW ADDRESSSSSSSSSSSSSSSSSSSSSSSSS');
+
     List<Placemark> placemarks =
         await placemarkFromCoordinates(latitude, longitude);
     print(placemarks);
@@ -132,26 +138,30 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> location() async {}
+
   Future<void> getLocation() async {
     Position position = await _getGeoLocationPosition();
     print('Current Location Response: $position');
     print('Current LatitudeSSSSSSSSS: ${position.latitude}');
     print('Current LongitudeSSSSSSSSSS:${position.longitude}');
-    GetAddressFromLatLong(position).then((_) {
-      if (_address.length > 0) {
-        isLoading = false;
-      } else {
-        isLoading = true;
-      }
-    });
+    _coorDinates['lat'] == 0.0 && _coorDinates['lng'] == 0.0
+        ? GetAddressFromLatLong(position).then((_) {
+            if (_address.length > 0) {
+              isLoading = false;
+            } else {
+              isLoading = true;
+            }
+          })
+        : print('All Goooood');
 
-    _coorDinates['lat'] = position.latitude;
-    _coorDinates['lng'] = position.longitude;
+    // _coorDinates['lat'] = position.latitude;
+    // _coorDinates['lng'] = position.longitude;
 
-    print('Geo Location Latitude: ${_coorDinates['lat']}');
-    print('Geo Location Longitude: ${_coorDinates['lng']}');
+    // print('Geo Location Latitude: ${_coorDinates['lat']}');
+    // print('Geo Location Longitude: ${_coorDinates['lng']}');
 
-    notifyListeners();
+    // notifyListeners();
     // return position;
   }
 }

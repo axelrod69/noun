@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:noun_customer_app/models/stationMarkers.dart';
 // import 'package:mapmyindia_gl/mapmyindia_gl.dart';
 import 'dart:async';
 import '../utilities/constants.dart';
@@ -10,164 +11,97 @@ import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import '../models/clusterPoints.dart';
 import '../models/currentLocation.dart';
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
+import '../models/stationMarkers.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class MapWidget extends StatefulWidget {
+  final Map<String, dynamic> coorDinates;
+  final CameraPosition cameraPosition;
+
   @override
   State<MapWidget> createState() => _MapWidgetState();
+
+  MapWidget(this.coorDinates, this.cameraPosition);
 }
 
 class _MapWidgetState extends State<MapWidget> {
-  late ClusterManager _manager;
+  // late ClusterManager _manager;
   late double currentMapLatitude;
   late double currentMapLongitude;
   // List<Marker> markers = [];
 
   LatLng? latLng;
-  CameraPosition? cameraPosition;
+  // CameraPosition? cameraPosition;
   bool isLoading = true;
 
   final Completer<GoogleMapController> _controller = Completer();
 
-  Set<Marker> markers = {};
+  List<Marker> markers = [];
+  Set<Polyline> _polyLines = {};
+  PolylinePoints? polylinePoints;
+  List<LatLng> polyLineCoordinates = [];
+
+  Set<Marker> markerOne = {};
 
   GoogleMapController? newGoogleMapController;
 
   // CameraPosition(target: LatLng(48.856613, 2.352222), zoom: 12.0);
 
-  List<Place> items = [
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Place $i',
-          latLng: LatLng(48.848200 + i * 0.001, 2.319124 + i * 0.001)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Restaurant $i',
-          // isClosed: i % 2 == 0,
-          latLng: LatLng(48.858265 - i * 0.001, 2.350107 + i * 0.001)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Bar $i',
-          latLng: LatLng(48.858265 + i * 0.01, 2.350107 - i * 0.01)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Hotel $i',
-          latLng: LatLng(48.858265 - i * 0.1, 2.350107 - i * 0.01)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Test $i',
-          latLng: LatLng(66.160507 + i * 0.1, -153.369141 + i * 0.1)),
-    for (int i = 0; i < 10; i++)
-      Place(
-          name: 'Test2 $i',
-          latLng: LatLng(-36.848461 + i * 1, 169.763336 + i * 1)),
-  ];
-
   @override
   void initState() {
     // TODO: implement initState
-
-    _manager = _initClusterManager();
-    Provider.of<LocationProvider>(context, listen: false)
-        .getLocation()
-        .then((_) {
-      setState(() {
-        print('Value Of isLoading: ${isLoading}');
-        isLoading = false;
-      });
-    });
-
-    updateMarkers;
-
-    currentMapLatitude = Provider.of<LocationProvider>(context, listen: false)
-        .coorDinates['lat'];
-
-    currentMapLongitude = Provider.of<LocationProvider>(context, listen: false)
-        .coorDinates['lng'];
-
-    print('LAT LONGGGGGG');
-    print('Current Position Latitude: $currentMapLatitude');
-    print('Current Position Longitude: $currentMapLongitude');
-
-    latLng = LatLng(currentMapLatitude, currentMapLongitude);
-
-    print('Latitude Longitude: $latLng');
-
-    cameraPosition = CameraPosition(target: latLng!, zoom: 18.0);
-
     super.initState();
+
+    polylinePoints = PolylinePoints();
   }
 
-  locateUserPosition() async {
-    // Position currentPosition = await Geolocator.getCurrentPosition(
-    //     desiredAccuracy: LocationAccuracy.high);
+  void updateMarkers(
+      double latitude, double longitude, GoogleMapController controller) async {
+    print('Does This get printed?');
 
-    LatLng latLngPosition = LatLng(currentMapLatitude, currentMapLongitude);
-
-    CameraPosition newCameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 18.0);
-
-    setState(() {
-      newGoogleMapController!
-          .animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
-    });
-  }
-
-  void updateMarkers(double latitude, double longitude) {
     print('LATITUDE $latitude');
     print('LONGITUDE $longitude');
 
-    markers = {
-      Marker(
-          markerId: const MarkerId('1'), position: LatLng(latitude, longitude))
-    };
-    setState(() {
-      newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(latitude, longitude), zoom: 18.0)));
-    });
+    controller = await _controller.future;
+
+    // markers = {
+    //   Marker(
+    //       markerId: const MarkerId('1'), position: LatLng(latitude, longitude))
+    // };
+
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(latitude, longitude), zoom: 18.0)));
+
+    setState(() {});
   }
 
   // final CameraPosition _parisCameraPosition = cameraPosition;
   // cameraPosition = CameraPosition(target: )
 
-  ClusterManager _initClusterManager() {
-    return ClusterManager<Place>(items, _updateMarkers,
-        markerBuilder: _markerBuilder);
-  }
-
-  void _updateMarkers(Set<Marker> markers) {
-    print('Updated ${markers.length} markers');
-    setState(() {
-      this.markers = markers;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final coorDinates = Provider.of<LocationProvider>(context).coorDinates;
-
+    // final coorDinates = Provider.of<LocationProvider>(context).coorDinates;
+    markers = Provider.of<StationMarkers>(context).markers.isEmpty
+        ? []
+        : Provider.of<StationMarkers>(context).markers;
     final mediaQuery = MediaQuery.of(context).size;
-    return isLoading
-        ? const Center(
-            child: CircularProgressIndicator(
-              color: Color(0xff00ffba),
-            ),
-          )
-        : Stack(
-            children: [
-              Container(
-                height: mediaQuery.height * 0.6,
-                child: GoogleMap(
-                    initialCameraPosition: cameraPosition!,
-                    // markers: Set<Marker>.of(markers),
-                    markers: markers,
-                    mapType: MapType.normal,
-                    // myLocationEnabled: true,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                      _manager.setMapId(controller.mapId);
-                      newGoogleMapController = controller;
-                      newGoogleMapController!.setMapStyle('''
+
+    return Stack(
+      children: [
+        Container(
+          height: mediaQuery.height * 0.6,
+          child: GoogleMap(
+            initialCameraPosition: widget.cameraPosition,
+            // markers: Set<Marker>.of(markers),
+            markers: Set.of(markers),
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            polylines: _polyLines,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+              // _manager.setMapId(controller.mapId);
+              newGoogleMapController = controller;
+              newGoogleMapController!.setMapStyle('''
                     [
                       {
                         "elementType": "geometry",
@@ -330,91 +264,64 @@ class _MapWidgetState extends State<MapWidget> {
                       }
                     ]
                 ''');
-                      // locateUserPosition();
-                      updateMarkers(coorDinates['lat'], coorDinates['lng']);
-                      controller.animateCamera(CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                              target: LatLng(
-                                  coorDinates['lat'], coorDinates['lng']),
-                              zoom: 18.0)));
-                    },
-                    onCameraMove: _manager.onCameraMove,
-                    onCameraIdle: _manager.updateMap),
-              ),
-              Positioned(
-                //top: 2,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(right: 55.0, left: 55.0, top: 30.0),
-                  child: TextField(
-                    cursorColor: Theme.of(context).primaryColor,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10.0),
-                      hintText: 'Destination',
-                      prefixIcon: const Icon(
-                        Icons.location_on,
-                        color: Colors.white,
-                      ),
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.secondary,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
+              // locateUserPosition();
+              updateMarkers(widget.coorDinates['lat'],
+                  widget.coorDinates['lng'], controller);
+              setPolyLine(widget.coorDinates['lat'], widget.coorDinates['lng']);
+            },
+            // onCameraMove: _manager.onCameraMove,
+            // onCameraIdle: _manager.updateMap
+          ),
+        ),
+        Positioned(
+          //top: 2,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 55.0, left: 55.0, top: 30.0),
+            child: TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10.0),
+                hintText: 'Destination',
+                prefixIcon: const Icon(
+                  Icons.location_on,
+                  color: Colors.white,
+                ),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.secondary,
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  borderSide: BorderSide.none,
                 ),
               ),
-            ],
-          );
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
-  Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
-      (cluster) async {
-        return Marker(
-          markerId: MarkerId(cluster.getId()),
-          position: cluster.location,
-          onTap: () {
-            print('---- $cluster');
-            cluster.items.forEach((p) => print(p));
-          },
-          icon: await _getMarkerBitmap(cluster.isMultiple ? 80 : 50,
-              text: cluster.isMultiple ? cluster.count.toString() : null),
-        );
-      };
+  void setPolyLine(
+    double currentLatitude,
+    double currentLongitude,
+  ) async {
+    PolylineResult result = await polylinePoints!.getRouteBetweenCoordinates(
+        'AIzaSyCEOPMk8L4uOpB3OkPuNmesW_wWwDM_XB8',
+        PointLatLng(currentLatitude, currentLongitude),
+        const PointLatLng(22.6434340, 88.446740));
 
-  Future<BitmapDescriptor> _getMarkerBitmap(int size, {String? text}) async {
-    if (kIsWeb) size = (size / 2).floor();
+    if (result.status == 'OK') {
+      result.points.forEach((PointLatLng point) {
+        polyLineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
 
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint1 = Paint()..color = Colors.orange;
-    final Paint paint2 = Paint()..color = Colors.white;
-
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.2, paint2);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.8, paint1);
-
-    if (text != null) {
-      TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-      painter.text = TextSpan(
-        text: text,
-        style: TextStyle(
-            fontSize: size / 3,
-            color: Colors.white,
-            fontWeight: FontWeight.normal),
-      );
-      painter.layout();
-      painter.paint(
-        canvas,
-        Offset(size / 2 - painter.width / 2, size / 2 - painter.height / 2),
-      );
+      setState(() {
+        _polyLines.add(Polyline(
+            width: 10,
+            polylineId: PolylineId('polyLine'),
+            color: Color(0xff00ffba),
+            points: polyLineCoordinates));
+      });
     }
-
-    final img = await pictureRecorder.endRecording().toImage(size, size);
-    final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
-
-    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
 }
 

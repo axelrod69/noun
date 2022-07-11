@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import './models/currentLocation.dart';
 import './models/changeLocation.dart';
 import './screens/changeAddressInput.dart';
+import './models/stationMarkers.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,13 +33,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => LocationProvider()),
-        ChangeNotifierProvider(create: (context) => ChangeLocationProvider())
+        ChangeNotifierProvider(create: (context) => ChangeLocationProvider()),
+        ChangeNotifierProvider(create: (context) => StationMarkers())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData.dark().copyWith(
           // primarySwatch: Colors.blue,
-          primaryColor: Color(0xff00ffba),
+          primaryColor: const Color(0xff00ffba),
           colorScheme: ColorScheme.fromSwatch().copyWith(
             secondary: const Color(0xff1f1f1f),
           ),

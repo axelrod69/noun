@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noun_customer_app/widgets/bottom_navigation_bar.dart';
 import 'package:provider/provider.dart';
 import '../models/currentLocation.dart';
 import '../models/changeLocation.dart';
@@ -133,7 +134,14 @@ class SelectAddressState extends State<SelectAddress> {
                 Provider.of<LocationProvider>(context, listen: false)
                     .newAddress(latitude, longitude)
                     .then((_) {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => BottomNavigation()));
+                  // Navigator.of(context).pop();
+
+                  // setState(() {
+                  //   Provider.of<LocationProvider>(context, listen: false)
+                  //       .getLocation();
+                  // });
                 });
                 // });
               });
