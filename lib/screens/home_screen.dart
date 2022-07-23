@@ -146,11 +146,11 @@ class HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: mediaQuery.size.height * 0.05,
                       ),
-                      CarouselWidget(
-                          mediaQuery: mediaQuery, text: 'Video', isVideo: true),
-                      SizedBox(
-                        height: mediaQuery.size.height * 0.2,
-                      ),
+                      // CarouselWidget(
+                      //     mediaQuery: mediaQuery, text: 'Video', isVideo: true),
+                      // SizedBox(
+                      //   height: mediaQuery.size.height * 0.2,
+                      // ),
                     ],
                   ),
                 ),

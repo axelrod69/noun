@@ -33,131 +33,144 @@ class _LoginScreenState extends State<LoginScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  height: 120,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(
-                  height: 45.0,
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 30.0, vertical: 0.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                    boxShadow: [
-                      const BoxShadow(
-                          color: Color(0xff00ffba),
-                          offset: Offset(2, 2),
-                          blurRadius: 10,
-                          spreadRadius: 0.2),
-                      const BoxShadow(
-                        color: Colors.black,
-                        offset: Offset(-4, -4),
-                        blurRadius: 10,
-                      )
-                    ],
-                  ),
-                  child: TextField(
-                    onChanged: (value) {},
-                    decoration:
-                        kTextFieldDecoration.copyWith(hintText: 'Phone/Email'),
-                  ),
-                ),
-                const SizedBox(
-                  height: 55.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SmallButton('assets/images/fb.png'),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
-                    SmallButton('assets/images/gmail.png'),
-                  ],
-                ),
-                const SizedBox(
-                  height: 55.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: Theme(
-                        child: Checkbox(
-                          value: _checkBoxValue,
-                          shape: CircleBorder(),
-                          activeColor: Color(0xff00ffba),
-                          onChanged: (value) {
-                            setState(() {
-                              _checkBoxValue = value!;
-                            });
-                          },
-                        ),
-                        data:
-                            ThemeData(unselectedWidgetColor: Color(0xff1f1f1f)),
+          child: Stack(
+            children: [
+              Center(
+                child: Container(
+                  // color: Colors.red,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/logo.png',
+                        height: 120,
+                        fit: BoxFit.cover,
                       ),
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(
-                          color: Color(0xff1f1f1f),
-                          borderRadius: BorderRadius.circular(50),
+                      const SizedBox(
+                        height: 45.0,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 0.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25.0),
                           boxShadow: [
                             const BoxShadow(
-                              color: Color(0xff00ffba),
-                              offset: Offset(2, 2),
-                              blurRadius: 10,
-                              spreadRadius: 0.5,
-                            ),
+                                color: Color(0xff00ffba),
+                                offset: Offset(2, 2), //cahnge done
+                                blurRadius: 5, //cahnge done
+                                spreadRadius: 0.2), //cahnge done
                             const BoxShadow(
                               color: Colors.black,
-                              offset: Offset(-4, -4),
-                              blurRadius: 10,
+                              offset: Offset(-3, -3), //cahnge done
+                              blurRadius: 5, //cahnge done
                             )
-                          ]),
-                    ),
-                    SizedBox(width: 10.0),
-                    Text(
-                      'Terms and Condition',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800, fontSize: 14.0),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 75.0,
-                ),
-                Button('LOGIN', () {
-                  // Navigator.pushNamed(context, BottomNavigation.id);
-                  // Timer(const Duration(milliseconds: 500),
-                  //     () => Navigator.pushNamed(context, BottomNavigation.id));
-                  Timer(const Duration(milliseconds: 500),
-                      () => Navigator.pushNamed(context, OtpScreen.id));
-                }),
-                const SizedBox(
-                  height: 35.0,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: 'Dont Have an account? ',
-                    //style: DefaultTextStyle.of(context).style,
-                    children: const <TextSpan>[
-                      TextSpan(
-                        text: 'Login',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.red),
+                          ],
+                        ),
+                        child: TextField(
+                          onChanged: (value) {},
+                          decoration: kTextFieldDecoration.copyWith(
+                              hintText: 'Phone/Email'),
+                        ),
                       ),
+                      const SizedBox(
+                        height: 55.0,
+                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     SmallButton('assets/images/fb.png'),
+                      //     const SizedBox(
+                      //       width: 20.0,
+                      //     ),
+                      //     SmallButton('assets/images/gmail.png'),
+                      //   ],
+                      // ),
+                      // const SizedBox(
+                      //   height: 55.0,
+                      // ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Container(
+                      //       child: Theme(
+                      //         child: Checkbox(
+                      //           value: _checkBoxValue,
+                      //           shape: CircleBorder(),
+                      //           activeColor: Color(0xff00ffba),
+                      //           onChanged: (value) {
+                      //             setState(() {
+                      //               _checkBoxValue = value!;
+                      //             });
+                      //           },
+                      //         ),
+                      //         data: ThemeData(
+                      //             unselectedWidgetColor: Color(0xff1f1f1f)),
+                      //       ),
+                      //       height: 20,
+                      //       width: 20,
+                      //       decoration: BoxDecoration(
+                      //           color: Color(0xff1f1f1f),
+                      //           borderRadius: BorderRadius.circular(50),
+                      //           boxShadow: [
+                      //             const BoxShadow(
+                      //               color: Color(0xff00ffba),
+                      //               offset: Offset(2, 2),
+                      //               blurRadius: 5, //cahnge done
+                      //               spreadRadius: 0.4, //cahnge done
+                      //             ),
+                      //             const BoxShadow(
+                      //                 color: Colors.black,
+                      //                 offset: Offset(-2, -2), //cahnge done
+                      //                 blurRadius: 5 //cahnge done,
+                      //                 )
+                      //           ]),
+                      //     ),
+                      //     SizedBox(width: 10.0),
+                      //     Text(
+                      //       'Terms and Condition',
+                      //       style: TextStyle(
+                      //           fontWeight: FontWeight.w800, fontSize: 14.0),
+                      //     ),
+                      //   ],
+                      // ),
+                      const SizedBox(
+                        height: 75.0,
+                      ),
+                      Button('LOGIN', () {
+                        // Navigator.pushNamed(context, BottomNavigation.id);
+                        // Timer(const Duration(milliseconds: 500),
+                        //     () => Navigator.pushNamed(context, BottomNavigation.id));
+                        Timer(const Duration(milliseconds: 500),
+                            () => Navigator.pushNamed(context, OtpScreen.id));
+                      }),
+                      // const SizedBox(
+                      //   height: 35.0,
+                      // ),
+                      // RichText(
+                      //   text: TextSpan(
+                      //     text: 'Dont Have an account? ',
+                      //     //style: DefaultTextStyle.of(context).style,
+                      //     children: const <TextSpan>[
+                      //       TextSpan(
+                      //         text: 'Login',
+                      //         style: TextStyle(
+                      //             fontWeight: FontWeight.bold,
+                      //             color: Colors.red),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              // Container(
+              //   height: 420,
+              //   width: double.infinity,
+              //   color: Colors.black.withOpacity(0.4),
+              // ),
+            ],
           ),
         ),
       ),

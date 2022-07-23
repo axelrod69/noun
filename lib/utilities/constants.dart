@@ -22,13 +22,13 @@ final kBookAndPayContainer = BoxDecoration(
     BoxShadow(
       color: Color(0xff00ffba),
       offset: Offset(0, 0),
-      blurRadius: 15,
-      spreadRadius: 0.5,
+      blurRadius: 5, //change done
+      spreadRadius: 0.4, //change done
     ),
     BoxShadow(
       color: Colors.black,
-      offset: Offset(-4, -4),
-      blurRadius: 10,
+      offset: Offset(-2, -2), //change done
+      blurRadius: 5, //change done
     )
   ],
 );

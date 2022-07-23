@@ -19,14 +19,14 @@ class CarouselItem extends StatelessWidget {
         boxShadow: [
           const BoxShadow(
             color: Color(0xff00ffba),
-            offset: Offset(0, 0),
-            blurRadius: 10,
-            spreadRadius: 0.5,
+            offset: Offset(1, 1),
+            blurRadius: 3, //Change done
+            spreadRadius: 0.4, //Change done
           ),
           const BoxShadow(
             color: Colors.black,
-            offset: Offset(-4, -4),
-            blurRadius: 10,
+            offset: Offset(-2, -2), //Change done
+            blurRadius: 3, //Change done
           )
         ],
       ),
@@ -38,7 +38,7 @@ class CarouselItem extends StatelessWidget {
                 flex: 3,
                 child: Container(
                   //color: Colors.amber,
-                  padding: EdgeInsets.all(5.0),
+                  padding: EdgeInsets.all(14.0), //change done
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,

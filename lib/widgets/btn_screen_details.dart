@@ -40,13 +40,13 @@ class _StationDetailsScreenButtonState
                 ? [
                     BoxShadow(
                       color: Color(0xff1b1e2b),
-                      offset: Offset(-5, -5),
-                      blurRadius: 5,
+                      offset: Offset(-2, -2), //Change done
+                      blurRadius: 3, //Change done
                     ),
                     BoxShadow(
                       color: Color(0xff07080b),
-                      offset: Offset(5, 5),
-                      blurRadius: 5,
+                      offset: Offset(2, 2), //Change done
+                      blurRadius: 3, //Change done
                     ),
                   ]
                 : null),

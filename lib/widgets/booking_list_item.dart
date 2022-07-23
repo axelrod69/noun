@@ -14,8 +14,8 @@ class BookingListItem extends StatelessWidget {
             BoxShadow(
               color: Colors.black,
               offset: Offset(2, 2),
-              blurRadius: 15,
-              spreadRadius: 0.5,
+              blurRadius: 3, //Change done
+              spreadRadius: 0.4, //Change done
             ),
           ]),
       child: Row(

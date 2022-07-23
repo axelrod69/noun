@@ -61,6 +61,26 @@ class _SelectCarScreenState extends State<SelectCarScreen> {
               text: 'Model',
             ),
             SizedBox(
+              height: mediaQuery.height * 0.06,
+            ),
+            DropDownWidget(
+              dataList: [
+                'AC',
+                'DC',
+              ],
+              text: 'Charger Type',
+            ),
+            SizedBox(
+              height: mediaQuery.height * 0.06,
+            ),
+            DropDownWidget(
+              dataList: [
+                'EV',
+                'CCS2',
+              ],
+              text: 'Port type',
+            ),
+            SizedBox(
               height: mediaQuery.height * 0.09,
             ),
             // Button('Save', () {

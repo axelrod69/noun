@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:noun_customer_app/screens/select_money_charge_screen.dart';
 import 'package:noun_customer_app/screens/slot_booking_screen.dart';
 import '../utilities/constants.dart';
 import 'small_container.dart';
@@ -149,69 +150,29 @@ class _BookingScreenContainerState extends State<BookingScreenContainer> {
             SizedBox(
               height: mediaQuery.height * 0.01,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(15.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text(
-            //         'Time',
-            //         style: TextStyle(fontWeight: FontWeight.bold),
-            //       ),
-            //       ElevatedButton(
-            //         onPressed: () async {
-            //           TimeOfDay? newTime = await showTimePicker(
-            //             context: context,
-            //             initialTime: _convertedTime,
-            //           );
-            //           if (newTime == null) return;
-
-            //           setState(() {
-            //             _convertedTime = newTime;
-            //           });
-            //         },
-            //         child: Text(
-            //           "$hours:$minutes",
-            //           style: TextStyle(fontWeight: FontWeight.bold),
-            //         ),
-            //         style: ElevatedButton.styleFrom(
-            //           primary: Theme.of(context).colorScheme.secondary,
-            //           padding: EdgeInsets.symmetric(
-            //               vertical: 10.0, horizontal: 50.0),
-            //           elevation: 20.0,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: mediaQuery.height * 0.001,
-            // ),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Date',
+                    'Time',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      DateTime? newDate = await showDatePicker(
+                      TimeOfDay? newTime = await showTimePicker(
                         context: context,
-                        initialDate: _convertedDate,
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2100),
+                        initialTime: _convertedTime,
                       );
-                      if (newDate == null) return;
+                      if (newTime == null) return;
 
                       setState(() {
-                        _convertedDate = newDate;
+                        _convertedTime = newTime;
                       });
                     },
                     child: Text(
-                      '${_convertedDate.day}/${_convertedDate.month}/${_convertedDate.year}',
+                      "$hours:$minutes",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -228,59 +189,99 @@ class _BookingScreenContainerState extends State<BookingScreenContainer> {
               height: mediaQuery.height * 0.001,
             ),
             // Padding(
-            //   padding:
-            //       const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            //   padding: const EdgeInsets.all(15.0),
             //   child: Row(
             //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
             //     children: [
-            //       Text('Power', style: TextStyle(fontWeight: FontWeight.bold)),
-            //       Container(
-            //         width: 150,
-            //         child: TextField(
-            //           textAlign: TextAlign.center,
-            //           onChanged: (value) {},
-            //           decoration: InputDecoration(
-            //             hintText: '10KmH',
-            //             focusedBorder: OutlineInputBorder(
-            //               borderSide: BorderSide(
-            //                 color: Theme.of(context).primaryColor,
-            //               ),
-            //             ),
-            //           ),
+            //       Text(
+            //         'Date',
+            //         style: TextStyle(fontWeight: FontWeight.bold),
+            //       ),
+            //       ElevatedButton(
+            //         onPressed: () async {
+            //           DateTime? newDate = await showDatePicker(
+            //             context: context,
+            //             initialDate: _convertedDate,
+            //             firstDate: DateTime(1900),
+            //             lastDate: DateTime(2100),
+            //           );
+            //           if (newDate == null) return;
+
+            //           setState(() {
+            //             _convertedDate = newDate;
+            //           });
+            //         },
+            //         child: Text(
+            //           '${_convertedDate.day}/${_convertedDate.month}/${_convertedDate.year}',
+            //           style: TextStyle(fontWeight: FontWeight.bold),
+            //         ),
+            //         style: ElevatedButton.styleFrom(
+            //           primary: Theme.of(context).colorScheme.secondary,
+            //           padding: EdgeInsets.symmetric(
+            //               vertical: 10.0, horizontal: 50.0),
+            //           elevation: 20.0,
             //         ),
             //       ),
             //     ],
             //   ),
             // ),
+            SizedBox(
+              height: mediaQuery.height * 0.001,
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Power', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Container(
+                    width: 150,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      onChanged: (value) {},
+                      decoration: InputDecoration(
+                        hintText: '10KmH',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             SizedBox(
               height: mediaQuery.height * 0.001,
             ),
-            // Padding(
-            //   padding:
-            //       const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text('Power', style: TextStyle(fontWeight: FontWeight.bold)),
-            //       Container(
-            //         width: 150,
-            //         child: TextField(
-            //           textAlign: TextAlign.center,
-            //           onChanged: (value) {},
-            //           decoration: InputDecoration(
-            //             hintText: '10KmH',
-            //             focusedBorder: OutlineInputBorder(
-            //               borderSide: BorderSide(
-            //                 color: Theme.of(context).primaryColor,
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Power', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Container(
+                    width: 150,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      onChanged: (value) {},
+                      decoration: InputDecoration(
+                        hintText: '10KmH',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               height: mediaQuery.height * 0.01,
             ),
@@ -292,8 +293,10 @@ class _BookingScreenContainerState extends State<BookingScreenContainer> {
               height: mediaQuery.height * 0.05,
             ),
             Button('Continue', () {
-              Timer(const Duration(milliseconds: 500),
-                  () => Navigator.pushNamed(context, SlotBookingScreen.id));
+              Timer(
+                  const Duration(milliseconds: 500),
+                  () => Navigator.pushNamed(
+                      context, PaymentScreen.id)); // change done
             }),
             SizedBox(
               height: mediaQuery.height * 0.05,

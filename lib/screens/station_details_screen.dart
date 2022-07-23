@@ -51,7 +51,8 @@ class _StationDetailsScreenState extends State<StationDetailsScreen> {
               SimpleDialogOption(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                 onPressed: () {
-                  Navigator.pushNamed(context, BookingScreen.id);
+                  Navigator.pushNamed(
+                      context, SlotBookingScreen.id); //change done
                 },
                 child: Text('Slot Booking'),
               ),

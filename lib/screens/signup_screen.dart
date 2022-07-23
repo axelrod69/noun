@@ -65,17 +65,17 @@ class _SignupScreenState extends State<SignupScreen> {
                               borderRadius: BorderRadius.circular(25.0),
                               boxShadow: [
                                 BoxShadow(
-                                  blurRadius: 10.0,
+                                  blurRadius: 3.0,
                                   offset: Offset(0, 0),
                                   color: Color(0xff00ffba),
                                 ),
                                 BoxShadow(
-                                  blurRadius: 30.0,
-                                  offset: Offset(-15, -15),
+                                  blurRadius: 10.0, //Change done
+                                  offset: Offset(-5, -5), //Change done
                                   color: Colors.black,
                                 ),
                                 BoxShadow(
-                                  blurRadius: 5.0,
+                                  blurRadius: 3.0, //Change done
                                   offset: Offset(-1, -1),
                                   color: Colors.black,
                                 )
@@ -98,17 +98,17 @@ class _SignupScreenState extends State<SignupScreen> {
                               borderRadius: BorderRadius.circular(25.0),
                               boxShadow: [
                                 BoxShadow(
-                                  blurRadius: 10.0,
+                                  blurRadius: 5.0, //Change done
                                   offset: Offset(0, 0),
                                   color: Color(0xff00ffba),
                                 ),
                                 BoxShadow(
-                                  blurRadius: 30.0,
-                                  offset: Offset(-15, -15),
+                                  blurRadius: 10.0, //Change done
+                                  offset: Offset(-5, -5), //Change done
                                   color: Colors.black,
                                 ),
                                 BoxShadow(
-                                  blurRadius: 5.0,
+                                  blurRadius: 3.0, //Change done
                                   offset: Offset(-1, -1),
                                   color: Colors.black,
                                 )
@@ -131,17 +131,17 @@ class _SignupScreenState extends State<SignupScreen> {
                               borderRadius: BorderRadius.circular(25.0),
                               boxShadow: [
                                 BoxShadow(
-                                  blurRadius: 10.0,
+                                  blurRadius: 5.0, //Change done
                                   offset: Offset(0, 0),
                                   color: Color(0xff00ffba),
                                 ),
                                 BoxShadow(
-                                  blurRadius: 30.0,
-                                  offset: Offset(-15, -15),
+                                  blurRadius: 10.0, //Change done
+                                  offset: Offset(-5, -5), //Change done
                                   color: Colors.black,
                                 ),
                                 BoxShadow(
-                                  blurRadius: 5.0,
+                                  blurRadius: 3.0, //Change done
                                   offset: Offset(-1, -1),
                                   color: Colors.black,
                                 )
@@ -164,17 +164,17 @@ class _SignupScreenState extends State<SignupScreen> {
                               borderRadius: BorderRadius.circular(25.0),
                               boxShadow: [
                                 BoxShadow(
-                                  blurRadius: 10.0,
+                                  blurRadius: 5.0, //Change done
                                   offset: Offset(0, 0),
                                   color: Color(0xff00ffba),
                                 ),
                                 BoxShadow(
-                                  blurRadius: 30.0,
-                                  offset: Offset(-15, -15),
+                                  blurRadius: 10.0, //Change done
+                                  offset: Offset(-5, -5), //Change done
                                   color: Colors.black,
                                 ),
                                 BoxShadow(
-                                  blurRadius: 5.0,
+                                  blurRadius: 3.0, //Change done
                                   offset: Offset(-1, -1),
                                   color: Colors.black,
                                 )
@@ -197,17 +197,17 @@ class _SignupScreenState extends State<SignupScreen> {
                               borderRadius: BorderRadius.circular(25.0),
                               boxShadow: [
                                 BoxShadow(
-                                  blurRadius: 10.0,
+                                  blurRadius: 5.0, //Change done
                                   offset: Offset(0, 0),
                                   color: Color(0xff00ffba),
                                 ),
                                 BoxShadow(
-                                  blurRadius: 30.0,
-                                  offset: Offset(-15, -15),
+                                  blurRadius: 10.0, //Change done
+                                  offset: Offset(-5, -5), //Change done
                                   color: Colors.black,
                                 ),
                                 BoxShadow(
-                                  blurRadius: 5.0,
+                                  blurRadius: 3.0, //Change done
                                   offset: Offset(-1, -1),
                                   color: Colors.black,
                                 )

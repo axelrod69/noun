@@ -25,15 +25,15 @@ class SmallConatiner extends StatelessWidget {
               color: (forContainerForBookAndPay == false)
                   ? Color(0xff1b1e2b)
                   : Color(0xff242424),
-              offset: Offset(-5, -5),
-              blurRadius: 5,
+              offset: Offset(-2, -2), //change done
+              blurRadius: 3, //change done
             ),
             BoxShadow(
               color: (forContainerForBookAndPay == false)
                   ? Color(0xff07080b)
                   : Color(0xff1a1a1a),
-              offset: Offset(5, 5),
-              blurRadius: 5,
+              offset: Offset(2, 2), //change done
+              blurRadius: 3, //change done
             ),
           ]),
       child: Row(

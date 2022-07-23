@@ -71,8 +71,8 @@ class BottomNavigationState extends State<BottomNavigation> {
           BoxShadow(
               color: Theme.of(context).primaryColor,
               // spreadRadius: 1,
-              blurRadius: 15,
-              offset: Offset(1, 1))
+              blurRadius: 4, //Change done
+              offset: Offset(1, 1)) //Change done
         ]),
         child: CurvedNavigationBar(
           items: items,
